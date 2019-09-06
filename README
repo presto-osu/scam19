@@ -6,8 +6,7 @@ described in the SCAM'19 paper:
 @inproceedings{zhang-scam19,
   title = " Introducing Privacy in Screen Event Frequency Analysis for {Android} Apps",
   author = " Hailong Zhang and Sufian Latif and Raef Bassily and Atanas Rountev",
-  booktitle = "IEEE International Working Conference on
-  Source Code Analysis and Manipulation",
+  booktitle = "IEEE International Working Conference on Source Code Analysis and Manipulation",
   year = 2019,
 } 
 ```

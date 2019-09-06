@@ -53,7 +53,8 @@ As introduced in the paper, the instrumentation is to insert the
 implemenation layer into closed-sourced APKs for recording of
 run-time events. The source code for the instrumentation is in
 `code/instrument`.  The implemenation layer is in package
-`edu.osu.cse.presto.android.gator.instrument.runtime`.
+`edu.osu.cse.presto.android.gator.instrument.runtime`.  We are
+working on adapting other analytics frameworks, e.g., Firebase.
 
 To run the instrumentation, use the `i` command for `gator`.  For the
 example of the `parking` app, the command is as follows:
@@ -75,21 +76,23 @@ instruments and the run an APK using Monkey. Again, we take the
 
 ```bash
 $ cd sootOutput/mani
-$ ./simulate_by_monkey.py ../../../apks/il.talent.parking.apk api_27_0 emulator-5554
+$ ./simulate_by_monkey.py -p ../../../apks/il.talent.parking.apk -v api_27_0 -d emulator-5554
 ```
 
-The first parameter is the path of the original APK. The second is
-the name for the virtual device (AVD) and the third is the name for
-the run-time emulator. While an AVD's name can be arbitrary, the
-emulator's name has to be in the form as `emulator-xxxx` where `xxxx`
-is a four digit number that conforms to the requirements for the
-`-port` option of Android SDK's `emulator` command. More information
-can be found
+Parameter `-p` indicates the path of the original APK. Parameters
+`-v` and `-d` specify the name for the virtual device (AVD) and the
+name for the run-time emulator. While an AVD's name can be arbitrary,
+the emulator's name has to be in the form as `emulator-xxxx` where
+`xxxx` is a four digit number that conforms to the requirements for
+the `-port` option of Android SDK's `emulator` command. More
+information can be found
 [here](https://developer.android.com/studio/run/emulator-commandline).
+Run the script with `-h` option shows other options/parameters.
+
 This script will keep triggering the Monkey tool to generate random
 events to be fed into the emulator. In our experiments, we stop this
 process when the number of screen view events goes beyond `10x` the
-size of dictionary.
+size of the dictionary.
 
 # Simulation and Plotting
 

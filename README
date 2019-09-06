@@ -1,6 +1,16 @@
 This release includes the source code for the static analyses,
 instrumentation and necessary scripts to reproduce the results
-described in our SCAM'19 papers.
+described in the SCAM'19 paper:
+
+```
+@inproceedings{zhang-scam19,
+  title = " Introducing Privacy in Screen Event Frequency Analysis for {Android} Apps",
+  author = " Hailong Zhang and Sufian Latif and Raef Bassily and Atanas Rountev",
+  booktitle = "IEEE International Working Conference on
+  Source Code Analysis and Manipulation",
+  year = 2019,
+} 
+```
 
 The directory structure is as follows:
 
@@ -18,7 +28,8 @@ The directory structure is as follows:
 - code: source code for the static analysis and instrumentation, as
   well as scripts to run Monkey for simulation.
 
-- simulation: scripts to read from, randomize events in databases,
-  and plot the results in the paper.
+- simulation: scripts to read and randomize events in databases, and
+  plot the results described in the paper.
 
 - xml: results of the static analysis for the experimental subjects.
+

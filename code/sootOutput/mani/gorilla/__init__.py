@@ -22,6 +22,9 @@ except:
     MAGENTA = ''
     RESET = ''
 
+
+ADB = os.path.join(os.environ['ANDROID_SDK'], 'platform-tools', 'adb')
+
 progress_signs = ['-', '/', '|', '\\']
 progress_idx = 0
 
@@ -70,7 +73,7 @@ def kill_proc(proc):
 
 def get_devices():
     try:
-        command = ['adb', 'devices']
+        command = [ADB, 'devices']
         # info(' '.join(command))
         out = subprocess.check_output(
             command, stderr=subprocess.STDOUT, universal_newlines=True)
@@ -185,7 +188,7 @@ class Gorilla:
 
     def root(self):
         for device in self.devices:
-            subprocess.call(['adb', '-s', device, 'root'])
+            subprocess.call([ADB, '-s', device, 'root'])
 
     def get_pkg_name(self):
         command = 'aapt dump badging ' + self.apk_path + ' | grep "package: name"'
@@ -251,7 +254,7 @@ class Gorilla:
             self.clear_package_per_device(device)
 
     def clear_package_per_device(self, device):
-        cmd = ['adb', '-s', device, 'shell', 'pm', 'clear', self.pkg_name]
+        cmd = [ADB, '-s', device, 'shell', 'pm', 'clear', self.pkg_name]
         info(' '.join(cmd))
         subprocess.call(cmd)
 
@@ -260,8 +263,8 @@ class Gorilla:
             return True
         try:
             command = [
-                # 'adb', '-s', device, 'shell', 'pm', 'install', '-g', self.apk_path
-                'adb',
+                # ADB, '-s', device, 'shell', 'pm', 'install', '-g', self.apk_path
+                ADB,
                 '-s',
                 device,
                 'install',
@@ -348,7 +351,7 @@ class Gorilla:
         read_monkey_futures = {}
         read_logcat_futures = {}
         for device in self.devices:
-            subprocess.call(['adb', '-s', device, 'logcat', '-c'])
+            subprocess.call([ADB, '-s', device, 'logcat', '-c'])
             read_logcat_futures[device] = self.logcat_reader_executor.submit(
                 self.read_logcat, device, self.start_logcat(device))
             read_monkey_futures[device] = self.monkey_reader_executor.submit(
@@ -365,10 +368,10 @@ class Gorilla:
         return ret
 
     def start_logcat(self, device):
-        subprocess.call(['adb', '-s', device, 'logcat', '-c'])
+        subprocess.call([ADB, '-s', device, 'logcat', '-c'])
         try:
             self.logcat_proc[device] = subprocess.Popen(
-                ['adb', '-s', device, 'logcat'],
+                [ADB, '-s', device, 'logcat'],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 universal_newlines=True)
@@ -463,7 +466,7 @@ class Gorilla:
         if not db_path:
             return
         cmd = [
-            'adb', '-s', device, 'pull', db_path,
+            ADB, '-s', device, 'pull', db_path,
             '%s/%s_%s.db' % (self.db_dir, self.pkg_name, device)
         ]
         info(' '.join(cmd))
@@ -476,10 +479,10 @@ class Gorilla:
             self.reboot_one_device(device)
 
     def reboot_one_device(self, device):
-        cmd = ['adb', '-s', device, 'reboot']
+        cmd = [ADB, '-s', device, 'reboot']
         err('Going to reboot %s' % device)
         subprocess.call(cmd)
-        cmd = ['adb', '-s', device, 'wait-for-device']
+        cmd = [ADB, '-s', device, 'wait-for-device']
         subprocess.call(cmd)
         self.root()
         info(self.getDevices())

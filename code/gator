@@ -266,7 +266,8 @@ def main():
         '--id',
         dest='ga_id',
         metavar='ID',
-        required=True,
+        default='UA-22467386-22',
+        required=False,
         help='Google Analytics tracking ID, e.g., UA-22467386-22')
 
     parser_instrument.add_argument(

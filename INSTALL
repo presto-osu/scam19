@@ -17,16 +17,13 @@ The source code for the static analysis is in a module called
 `sootandroid`. It is build upon the Soot analysis framework.  To
 build the project, first create a file `local.properties` indicating
 the location of the Android SDK. This file complies with Android
-Studio's configuration file. An example is as follows:
-
-```
-sdk.dir=/path/to/Android/Sdk
-```
+Studio's configuration file. A sample is in the `code` directory.
 
 Next, run the following commands:
 
 ```bash
 $ cd code
+$ $ANDROID_SDK/tools/bin/sdkmanager "platforms;android-27" # if you don't have it installed
 $ ./gator b
 ```
 
@@ -76,6 +73,7 @@ instruments and the run an APK using Monkey. Again, we take the
 
 ```bash
 $ cd sootOutput/mani
+$ $ANDROID_SDK/tools/bin/sdkmanager "system-images;android-27;google_apis;x86" # if you don't have it installed
 $ ./simulate_by_monkey.py -p ../../../apks/il.talent.parking.apk -v api_27_0 -d emulator-5554
 ```
 

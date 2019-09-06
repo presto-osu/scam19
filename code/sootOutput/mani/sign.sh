@@ -10,7 +10,7 @@ expect ./sign.expect $apkPath ./my-release-key.keystore
 
 echo ..... Zipalign
 mv $apkPath .$apkPath
-zipalign -v 4 .$apkPath $apkPath
-zipalign -c -v 4 $apkPath
+${ANDROID_SDK}/build-tools/28.0.3/zipalign -v 4 .$apkPath $apkPath
+${ANDROID_SDK}/build-tools/28.0.3/zipalign -c -v 4 $apkPath
 rm .$apkPath
 

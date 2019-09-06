@@ -17,6 +17,8 @@ GATOR = os.path.join(GATOR_DIR, 'gator')
 
 hostname = subprocess.check_output(['hostname']).strip()
 
+ADB = os.path.join(os.environ['ANDROID_SDK'], 'platform-tools', 'adb')
+EMULATOR = os.path.join(os.environ['ANDROID_SDK'], 'emulator', 'emulator')
 
 def newline():
     sys.stdout.write('\n')
@@ -154,7 +156,7 @@ def shutdown(avd, dev):
         return
     while dev in avds:
         warn('Shutting down %s at %s' % (avd, dev))
-        subprocess.call(['adb', '-s', dev, 'shell', 'reboot', '-p'])
+        subprocess.call([ADB, '-s', dev, 'shell', 'reboot', '-p'])
         time.sleep(10)
         avds = get_devices()
         if not avds:
@@ -177,7 +179,7 @@ def run_on_emulator(apk,
         shutdown(avd, dev)
         port = dev[len('emulator-'):]
         cmd = [
-            'emulator', '-avd', avd, '-verbose', '-wipe-data', '-no-audio',
+            EMULATOR, '-avd', avd, '-verbose', '-wipe-data', '-no-audio',
             '-no-snapshot', '-port', port, '-no-boot-anim'
         ]
         if not window:

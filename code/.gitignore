@@ -100,3 +100,4 @@ local.properties
 !/tools/*
 !/libs/*
 *.jobf
+.idea/compiler.xml

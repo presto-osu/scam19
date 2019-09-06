@@ -7,7 +7,7 @@
  * in the root directory.
  */
 
-rootProject.name = 'android-ga'
+rootProject.name = 'scam19'
 include 'instrument'
 include 'commons'
 include 'sootandroid'

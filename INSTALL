@@ -1,15 +1,15 @@
 # Prerequisites
 
-The experiments in our SCAM'19 paper are conducted on a machine with
-Intel(R) Xeon(R) CPU E5-2630, 64GB RAM and Ubuntu 18.04 LTS. Before
-the next steps, Android SDK and platform 27 need to be installed, as
-well as Java 1.8+ and Python 3.
+The experiments in our SCAM'19 paper are conducted on two machines
+with Intel(R) Xeon(R) CPU E5-2630, 64GB RAM and Ubuntu 18.04 LTS.
+Before the next steps, Android SDK and platform 27 need to be
+installed, as well as Java 1.8+ and Python 3.
 
 # Analysis and Instrumentation
 
 The source code for the static analysis and instrumentation in the
-paper is in the `code` folder.  We provide a script `gator` for ease
-of invocations of the Java program. 
+paper is in the `code` folder.  We provide a script `gator` for the
+ease of invocations of the Java program. 
 
 ## Static analysis
 
@@ -17,8 +17,11 @@ The source code for the static analysis is in a module called
 `sootandroid`. It is build upon the Soot analysis framework.  To
 build the project, first create a file `local.properties` indicating
 the location of the Android SDK. This file complies with Android
-Studio's configuration file. An example is in the `code` folder.
-Please change the settings accordingly.
+Studio's configuration file. An example is as follows:
+
+```
+sdk.dir=/path/to/Android/Sdk
+```
 
 Next, run the following commands:
 
@@ -27,16 +30,16 @@ $ cd code
 $ ./gator b
 ```
 
-Take the `parking` app as an example, the command below invokes the
-analysis
+To analyze an app, the APK file must be provided. Take the `parking`
+app as an example, the command below invokes the analysis:
 
 ```bash
 $ ./gator a -p ../apks/il.talent.parking.apk
 ```
 
 The output (a dictionary of screen names in XML format) is by default
-printed to the console. For other options, one can run the script
-with `-h`, as follows
+printed to the console. For other options, run the script with `-h`,
+as follows:
 
 ```bash
 $ ./gator a -h
@@ -48,41 +51,53 @@ The results for the 15 experimental subjects are stored in `xml`.
 
 As introduced in the paper, the instrumentation is to insert the
 implemenation layer into closed-sourced APKs for recording of
-run-time events. The source code is in `code/instrument`.  Follow the
-above mentioned build process to build the module.
+run-time events. The source code for the instrumentation is in
+`code/instrument`.  The implemenation layer is in package
+`edu.osu.cse.presto.android.gator.instrument.runtime`.
 
-To run the instrumentation, one can use the `i` command for `gator`
+To run the instrumentation, use the `i` command for `gator`.  For the
+example of the `parking` app, the command is as follows:
 
 ```bash
 $ ./gator i -x xml/il.talent.parking.apk.xml -p ../apks/il.talent.parking.apk
 ```
 
-Other options can be checked by passing `-h` in the similar way
-above.
+The `-x` indicates the XML file for the dictionary and `-p` specifies
+the original APK for the app.  Other options can be checked by
+passing `-h` in a similar way as above.
 
-The resulting instrumented APK is stored in `code/sootOutput/mani`.
-There are several scripts to help signing, installation and running
-of the APK in the same directory.  File `simulate_by_monkey.py` is a
-all-in-one script that atomatically instruments and the run an APK
-using Monkey. Again, we take the `parking` app as an example and show
-the usage of the script below
+The resulting instrumented APK will be stored in
+`code/sootOutput/mani` folder.  There are several scripts to help
+signing, installation and running of the APK. Script
+`simulate_by_monkey.py` is a all-in-one script that atomatically
+instruments and the run an APK using Monkey. Again, we take the
+`parking` app as an example and show the usage of the script below:
 
 ```bash
 $ cd sootOutput/mani
 $ ./simulate_by_monkey.py ../../../apks/il.talent.parking.apk api_27_0 emulator-5554
 ```
 
-The first parameter is the path of the APK. The second is the name
-for the virtual device (AVD) and the third is the name for the
-run-time emulator. Note that no window will be displayed for the
-emulator during the execution.
+The first parameter is the path of the original APK. The second is
+the name for the virtual device (AVD) and the third is the name for
+the run-time emulator. While an AVD's name can be arbitrary, the
+emulator's name has to be in the form as `emulator-xxxx` where `xxxx`
+is a four digit number that conforms to the requirements for the
+`-port` option of Android SDK's `emulator` command. More information
+can be found
+[here](https://developer.android.com/studio/run/emulator-commandline).
+This script will keep triggering the Monkey tool to generate random
+events to be fed into the emulator. In our experiments, we stop this
+process when the number of screen view events goes beyond `10x` the
+size of dictionary.
 
 # Simulation and Plotting
 
-Directory `simulation` includes the script for simulation and
-plotting. Subfolder `figure` contains the generated figures (shown in
-the evaluation section of the paper).
-Use the following command to run the script w/ and w/o sampling
+Directory `simulation` includes the scripts for simulation of the
+local randomizer in the paper, as well as for plotting the results.
+Subfolder `figure` contains the generated figures (shown in the
+evaluation section of the paper).  Use the following command to run
+the script w/ and w/o sampling
 
 ```bash
 $ ./simulate_randomization_and_plot.py 100 # without sampling

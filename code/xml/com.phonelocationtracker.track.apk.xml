@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ com.phonelocationtracker.track.apk.xml - part of the GATOR project
+  ~
+  ~ Copyright (c) 2018 The Ohio State University
+  ~
+  ~ This file is distributed under the terms described in LICENSE
+  ~ in the root directory.
+  -->
+
+<universe>
+    <autoTracking>false</autoTracking>
+    <name>MyLocationHistory</name>
+    <name>CautionCountdown</name>
+    <name>Addmobile</name>
+    <name>Direction</name>
+    <name>OurOthersApps</name>
+    <name>Getdirection</name>
+    <name>AddmobileManually</name>
+    <name>CategoryList</name>
+    <name>UpgradeToPremium</name>
+    <name>HelpFaq</name>
+    <name>PlacesResult</name>
+    <name>SOSNumberNotSet</name>
+    <name>Main</name>
+    <name>SOSSetting</name>
+    <act2name/>
+</universe>

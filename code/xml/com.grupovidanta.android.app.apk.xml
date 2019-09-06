@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ com.grupovidanta.android.app.apk.xml - part of the GATOR project
+  ~
+  ~ Copyright (c) 2018 The Ohio State University
+  ~
+  ~ This file is distributed under the terms described in LICENSE
+  ~ in the root directory.
+  -->
+
+<universe>
+    <autoTracking>false</autoTracking>
+    <name>POIDetails</name>
+    <name>Home - MultiVenue Brand</name>
+    <name>POIList</name>
+    <name>InfoDetails</name>
+    <name>Store</name>
+    <name>MessageDetails</name>
+    <name>EventDetails</name>
+    <name>Enhanced Home</name>
+    <name>EventList</name>
+    <name>Me</name>
+    <name>InfoList</name>
+    <name>Home</name>
+    <name>Map</name>
+    <name>Dining</name>
+    <name>MessageList</name>
+    <act2name/>
+</universe>

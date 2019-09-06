@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ com.paullipnyagov.hiphopdrumpads24.apk.xml - part of the GATOR project
+  ~
+  ~ Copyright (c) 2018 The Ohio State University
+  ~
+  ~ This file is distributed under the terms described in LICENSE
+  ~ in the root directory.
+  -->
+
+<universe>
+    <autoTracking>false</autoTracking>
+    <name>Onboarding About Presets</name>
+    <name>Preview Preset</name>
+    <name>Side Menu Close</name>
+    <name>Onboarding About Video and Tutorials</name>
+    <name>Fresh Apps</name>
+    <name>Video and tutorials</name>
+    <name>Onboarding With Video</name>
+    <name>Onboarding Welcome</name>
+    <name>Contact Us</name>
+    <name>Record</name>
+    <name>Menu</name>
+    <name>Onboarding UNKNOWN SCREEN WTF?</name>
+    <name>Records</name>
+    <name>Home</name>
+    <name>Settings</name>
+    <name>Onboarding Sign In</name>
+    <name>Side Menu Open</name>
+    <act2name/>
+</universe>

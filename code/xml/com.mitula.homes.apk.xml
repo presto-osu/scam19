@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ com.mitula.homes.apk.xml - part of the GATOR project
+  ~
+  ~ Copyright (c) 2018 The Ohio State University
+  ~
+  ~ This file is distributed under the terms described in LICENSE
+  ~ in the root directory.
+  -->
+
+<universe>
+    <autoTracking>false</autoTracking>
+    <name>LOCATIONS</name>
+    <name>SIGN_IN</name>
+    <name>PUBLISH_LISTING</name>
+    <name>FILTERS</name>
+    <name>SETTINGS</name>
+    <name>TERMS_AND_CONDITIONS</name>
+    <name>OTHERS</name>
+    <name>MAPS</name>
+    <name>MAP_DETAIL</name>
+    <name>ONBOARDING</name>
+    <name>FAVORITES</name>
+    <name>SIGN_UP</name>
+    <name>LISTING_DETAIL_WEBVIEW</name>
+    <name>STORED_SEARCHES</name>
+    <name>SIGN_UP_IN</name>
+    <name>LISTING_RESULTS</name>
+    <name>LISTING_DETAIL_NATIVE</name>
+    <name>LISTING_DETAIL_CHROME</name>
+    <name>HOME</name>
+    <name>ABOUT</name>
+    <act2name/>
+</universe>

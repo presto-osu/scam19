@@ -1,0 +1,288 @@
+#!/usr/bin/env python3
+
+import argparse
+import os
+from subprocess import call
+
+from pygator.unpacker import decode_res_from_apk
+from pygator.utils import remove_temp_dirs, extract_target_api
+
+GATOR_DIR = os.path.realpath(os.path.dirname(__file__))
+
+LOG_DIR = os.path.join(GATOR_DIR, 'log')
+XML_DIR = os.path.join(GATOR_DIR, 'xml')
+
+
+def analyze(args, unknown):
+    jar = os.path.join(GATOR_DIR, 'sootandroid', 'build', 'libs',
+                       'sootandroid-1.0-SNAPSHOT-all.jar')
+    if not os.path.exists(jar):
+        print('...... please build first.')
+        exit(-1)
+    apktool_dir = decode_res_from_apk(args.apkpath)
+    target_level = extract_target_api(os.path.join(apktool_dir, 'apktool.yml'))
+    if target_level == -1:
+        print(
+            '...... cannot determine the target API level for APK. Fallback to use 27.'
+        )
+        target_level = 27
+    elif target_level < 10:
+        print('...... target API level is below 10. Force to use 10.')
+        target_level = 10
+    print('...... resource decoded to %s' % apktool_dir)
+    apk_name = args.apkpath.split(os.sep)[-1]
+    cmd = [
+        'java', '-Xmx12G', '-cp', jar, 'edu.osu.cse.presto.android.gator.Main',
+        '-sdkDir', args.sdkpath, '-listenerSpecFile',
+        os.path.join(GATOR_DIR, 'sootandroid',
+                     'listeners.xml'), '-wtgSpecFile',
+        os.path.join(GATOR_DIR, 'sootandroid', 'wtg.xml'), '-apiLevel',
+        'android-%s' % target_level, '-guiAnalysis', "-implicitIntent",
+        "-gaEnabled", '-apktoolDir', apktool_dir, '-project', args.apkpath,
+        '-benchmarkName', apk_name, "-client", "GADemoClient"
+    ]
+    android_jar = os.path.join(args.sdkpath, 'platforms', 'android-%s' % target_level, 'android.jar')
+    if not os.path.exists(android_jar):
+        print('>>>>>> %s does not exist, try to install with sdkmanager...' % android_jar)
+        sub_cmd = [os.path.join(args.sdkpath, 'tools', 'bin', 'sdkmanager'),
+                   'platforms;android-%s' % target_level]
+        # print('>>>>>> %s' % ' '.join(sub_cmd))
+        call(sub_cmd)
+    cmd.extend(['-android', android_jar])
+    if args.xml:
+        cmd.extend(
+            ['-gaXmlOutput',
+             '%s.xml' % os.path.join(XML_DIR, apk_name)])
+    if args.verbose:
+        cmd.append('-verbose')
+    cmd.extend(unknown)
+    print('...... %s' % ' '.join(cmd))
+    if args.debug:  # print out the command
+        return
+    if not args.save_log:
+        call(cmd)
+    else:
+        with open(os.path.join(LOG_DIR, apk_name + '.log'), 'w') as outfile:
+            call(cmd, stdout=outfile, stderr=outfile)
+            print('...... log saved to %s' % outfile.name)
+    remove_temp_dirs()
+
+
+def instrument(args, unknown):
+    ga_instrument_dir = os.path.join(GATOR_DIR, 'instrument')
+    rt_class_dir = os.path.join(ga_instrument_dir, 'build', 'classes', 'java',
+                                'main')
+    jar = os.path.join(ga_instrument_dir, 'build', 'libs',
+                       'instrument-1.0-SNAPSHOT-all.jar')
+    cmd = [
+        'java', '-cp', jar, 'edu.osu.cse.presto.android.gator.instrument.Main',
+        args.apkpath,
+        str(args.verbose),
+        os.path.join(args.sdk_path, 'platforms'),
+        rt_class_dir,
+        args.ga_id,
+        args.data_xml,
+        args.rt_db,
+        str(args.random),
+        args.epsilon,
+        str(args.experiment),
+        args.simulate,
+        args.scale
+    ]
+    cmd.extend(unknown)
+    print('...... %s' % ' '.join(cmd))
+    if args.debug:
+        return
+    call(cmd)
+
+
+def build(args, unknown):
+    cmd = [
+        os.path.join(GATOR_DIR, 'gradlew'), ':instrument:shadowJar',
+        ':sootandroid:shadowJar'
+    ]
+    call(cmd)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='GATOR: Program Analysis Toolkit For Android.')
+
+    subparsers = parser.add_subparsers(dest='command', metavar='COMMAND')
+    subparsers.required = True
+
+    ####################################
+    ####################################
+    parser_compile = subparsers.add_parser(
+        'build', aliases=['b'], help='build')
+    parser_compile.set_defaults(func=build)
+
+    ####################################
+    ####################################
+    parser_analyze = subparsers.add_parser(
+        'analyze', aliases=['a'], help='analyze APK')
+    parser_analyze.set_defaults(func=analyze)
+
+    parser_analyze.add_argument(
+        '-d',
+        '--debug',
+        dest='debug',
+        action='store_true',
+        default=False,
+        help=
+        'debug mode (print out the Java command without actually running it)')
+
+    parser_analyze.add_argument(
+        '-v',
+        '--verbose',
+        dest='verbose',
+        action='store_true',
+        help='verbose mode')
+
+    parser_analyze.add_argument(
+        '-x',
+        '--xml',
+        dest='xml',
+        action='store_true',
+        help='store XML on disk')
+
+    parser_analyze.add_argument(
+        '-s',
+        '--sdk',
+        dest='sdkpath',
+        metavar='ANDROID_SDK',
+        default=os.environ['ANDROID_SDK'],
+        required=False,
+        help='path to the Android SDK ($ANDROID_SDK by default)')
+
+    parser_analyze.add_argument(
+        '-l',
+        '--log',
+        dest='save_log',
+        action='store_true',
+        default=False,
+        help='save log to disk')
+
+    parser_analyze.add_argument(
+        '-p',
+        '--apk',
+        dest='apkpath',
+        metavar='APK',
+        required=True,
+        help='path to the APK')
+
+    ####################################
+    ####################################
+    parser_instrument = subparsers.add_parser(
+        'instrument',
+        aliases=['i'],
+        help='instrument APK and store in "sootOutput" directory')
+    parser_instrument.set_defaults(func=instrument)
+
+    parser_instrument.add_argument(
+        '-v',
+        '--verbose',
+        dest='verbose',
+        action='store_true',
+        default=False,
+        help='verbose mode')
+
+    parser_instrument.add_argument(
+        '-d',
+        '--debug',
+        dest='debug',
+        action='store_true',
+        default=False,
+        help='debug mode')
+
+    parser_instrument.add_argument(
+        '-s',
+        '--sdk',
+        dest='sdk_path',
+        metavar='PATH',
+        default=os.environ['ANDROID_SDK'],
+        required=False,
+        help='path to the Android SDK')
+
+    parser_instrument.add_argument(
+        '-r',
+        '--random',
+        dest='random',
+        action='store_true',
+        default=False,
+        help='enable randomization')
+
+    parser_instrument.add_argument(
+        '--experiment',
+        dest='experiment',
+        action='store_true',
+        default=False,
+        help='experiment mode (dry-run)')
+
+    parser_instrument.add_argument(
+        '--simulate',
+        dest='simulate',
+        metavar='NUM_USERS',
+        default='1',
+        required=False,
+        help='simulate multiple users on one device')
+
+    parser_instrument.add_argument(
+        '--scale',
+        dest='scale',
+        metavar='NUM',
+        default='1',
+        required=False,
+        help='send every NUM event, i.e., scale by 1/NUM')
+
+    parser_instrument.add_argument(
+        '-b',
+        '--db',
+        dest='rt_db',
+        metavar='PATH',
+        default='<no-db>',
+        required=False,
+        help='path to runtime database')
+
+    parser_instrument.add_argument(
+        '-x',
+        '--xml',
+        dest='data_xml',
+        metavar='PATH',
+        required=True,
+        help='path to data universe in XML format')
+
+    parser_instrument.add_argument(
+        '-e',
+        '--epsilon',
+        dest='epsilon',
+        metavar='EPSILON',
+        default='8',
+        required=False,
+        help='set epsilon')
+
+    parser_instrument.add_argument(
+        '-i',
+        '--id',
+        dest='ga_id',
+        metavar='ID',
+        required=True,
+        help='Google Analytics tracking ID, e.g., UA-22467386-22')
+
+    parser_instrument.add_argument(
+        '-p',
+        '--apk',
+        dest='apkpath',
+        metavar='PATH',
+        required=True,
+        help='path to the APK')
+
+    ####################################
+    ####################################
+
+    args, unknown = parser.parse_known_args()
+    args.func(args, unknown)
+
+
+if __name__ == '__main__':
+    main()

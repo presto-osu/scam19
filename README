@@ -1,0 +1,24 @@
+This release includes the source code for the static analyses,
+instrumentation and necessary scripts to reproduce the results
+described in our SCAM'19 papers.
+
+The directory structure is as follows:
+
+- README: this file.
+
+- INSTALL: instructions for reproduction of the results in the paper.
+
+- LICENSE: license for the software components developed at OSU.
+
+- apks: APKs of apps used in the SCAM'19 paper.
+
+- db: recorded screen view events from Monkey runs as SQLite
+  databases.
+
+- code: source code for the static analysis and instrumentation, as
+  well as scripts to run Monkey for simulation.
+
+- simulation: scripts to read from, randomize events in databases,
+  and plot the results in the paper.
+
+- xml: results of the static analysis for the experimental subjects.

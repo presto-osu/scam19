@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ net.hubalek.android.apps.barometer.apk.xml - part of the GATOR project
+  ~
+  ~ Copyright (c) 2018 The Ohio State University
+  ~
+  ~ This file is distributed under the terms described in LICENSE
+  ~ in the root directory.
+  -->
+
+<universe>
+    <autoTracking>false</autoTracking>
+    <name>Widget Config Activity</name>
+    <name>Buy Pro Activity</name>
+    <name>Location permission request activity</name>
+    <name>My Places</name>
+    <name>Main Screen</name>
+    <name>AlertRuleDefinition Type Picker Activity</name>
+    <name>Place Edit Activity</name>
+    <name>False alarm reporting activity</name>
+    <name>AlertRuleDefinition Configuration Activity</name>
+    <name>Table View</name>
+    <name>MainScreenGaugeConfigurationActivity</name>
+    <name>Preferences Screen</name>
+    <name>About The App Screen</name>
+    <act2name/>
+</universe>

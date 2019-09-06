@@ -1,0 +1,57 @@
+/*
+ * build.gradle - part of the GATOR project
+ *
+ * Copyright (c) 2019 The Ohio State University
+ *
+ * This file is distributed under the terms described in LICENSE
+ * in the root directory.
+ */
+
+plugins {
+    id 'java'
+    id "com.github.johnrengelman.shadow" version "5.0.0"
+//    id "import-aar"
+}
+
+group 'edu.osu.cse.presto'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile project(':commons')
+    compile project(':stubs')
+    // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
+    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+    // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
+    compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.23.1'
+
+    /*
+     * Android Jar
+     */
+    def targetSdkVersion = 27
+    def sdkDir = "${System.env.ANDROID_SDK}"
+    def localProperties = project.rootProject.file('local.properties')
+    if (localProperties.exists()) {
+        Properties properties = new Properties()
+        properties.load(localProperties.newDataInputStream())
+        sdkDir = properties.getProperty('sdk.dir')
+    }
+    def androidJar = file("${sdkDir}/platforms/android-${targetSdkVersion}/android.jar")
+    if (!androidJar.exists()) {
+        exec {
+            commandLine "${sdkDir}/tools/bin/sdkmanager", "platforms;android-${targetSdkVersion}"
+        }
+    }
+    compile files("${androidJar}")
+
+    /*
+     * Aars
+     */
+//    implementationAar 'com.google.android.gms:play-services-analytics:15.0.2'
+}

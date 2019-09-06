@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ com.speedlogicapp.speedlogiclite.apk.xml - part of the GATOR project
+  ~
+  ~ Copyright (c) 2018 The Ohio State University
+  ~
+  ~ This file is distributed under the terms described in LICENSE
+  ~ in the root directory.
+  -->
+
+<universe>
+    <autoTracking>false</autoTracking>
+    <name>Night mode</name>
+    <name>Options</name>
+    <name>Feedback</name>
+    <name>Speedometer</name>
+    <name>Race</name>
+    <name>TopSpeed</name>
+    <name>Lap</name>
+    <name>RacePro</name>
+    <name>History</name>
+    <name>About</name>
+    <act2name/>
+</universe>

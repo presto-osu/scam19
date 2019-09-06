@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ il.talent.parking.apk.xml - part of the GATOR project
+  ~
+  ~ Copyright (c) 2018 The Ohio State University
+  ~
+  ~ This file is distributed under the terms described in LICENSE
+  ~ in the root directory.
+  -->
+
+<universe>
+    <autoTracking>false</autoTracking>
+    <name>CompassActivity</name>
+    <name>ZoneEditorActivity</name>
+    <name>HelpActivity</name>
+    <name>TransparentActivity</name>
+    <name>AboutActivity</name>
+    <name>AutoParkActivity</name>
+    <name>Splash</name>
+    <name>HistoryFragment</name>
+    <name>ParkActivity</name>
+    <name>LastParkingFragment</name>
+    <name>SettingsActivity</name>
+    <act2name/>
+</universe>

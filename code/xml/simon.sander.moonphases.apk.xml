@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ simon.sander.moonphases.apk.xml - part of the GATOR project
+  ~
+  ~ Copyright (c) 2018 The Ohio State University
+  ~
+  ~ This file is distributed under the terms described in LICENSE
+  ~ in the root directory.
+  -->
+
+<universe>
+    <autoTracking>false</autoTracking>
+    <name>/gotoPreviousMonth</name>
+    <name>/gotoPreviousDay</name>
+    <name>/gotoNextNewMoon</name>
+    <name>/showBuyDialog</name>
+    <name>/showHelpDialog</name>
+    <name>/showGardeningTip</name>
+    <name>/showExposureCalcDialog</name>
+    <name>/gotoNextDay</name>
+    <name>/gotoPreviousWeek</name>
+    <name>/showZodiacDescription</name>
+    <name>/gotoNextFullMoon</name>
+    <name>/showMonthView</name>
+    <name>/showGotoDateDialog</name>
+    <name>/showRateDialog</name>
+    <name>/showMain</name>
+    <name>/gotoNextWeek</name>
+    <act2name/>
+</universe>

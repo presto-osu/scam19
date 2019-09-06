@@ -1,0 +1,25 @@
+/*
+ * build.gradle - part of the GATOR project
+ *
+ * Copyright (c) 2019 The Ohio State University
+ *
+ * This file is distributed under the terms described in LICENSE
+ * in the root directory.
+ */
+
+plugins {
+    id "com.github.johnrengelman.shadow" version "5.0.0"
+    id 'java'
+}
+
+group 'edu.osu.cse.presto'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+dependencies {
+    compile group: 'junit', name: 'junit', version: '4.12'
+    // https://mvnrepository.com/artifact/org.atteo.classindex/classindex
+    compile group: 'org.atteo.classindex', name: 'classindex', version: '3.4'
+    compile project(':commons')
+}

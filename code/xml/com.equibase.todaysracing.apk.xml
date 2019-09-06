@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ com.equibase.todaysracing.apk.xml - part of the GATOR project
+  ~
+  ~ Copyright (c) 2018 The Ohio State University
+  ~
+  ~ This file is distributed under the terms described in LICENSE
+  ~ in the root directory.
+  -->
+
+<universe>
+    <autoTracking>false</autoTracking>
+    <name>InternationalEntries/Dates</name>
+    <name>InternationalResults/Tracks/Results</name>
+    <name>Carryovers</name>
+    <name>InternationalResults/Dates</name>
+    <name>Results/Tracks</name>
+    <name>Results/IndividualRace</name>
+    <name>Workouts/Tracks</name>
+    <name>RaceDetailsFragment</name>
+    <name>LoginVirtualStableActivity</name>
+    <name>InternationalEntries/Tracks</name>
+    <name>Workouts/Index</name>
+    <name>InternationalEntries/Tracks/Results</name>
+    <name>News/Article</name>
+    <name>WorkoutDetails</name>
+    <name>Notification/screen</name>
+    <name>Changes/Index</name>
+    <name>Results/Dates</name>
+    <name>LoginActivity</name>
+    <name>Entries/Tracks</name>
+    <name>BetCalculator</name>
+    <name>Workouts/Individual Workout</name>
+    <name>Entries/Dates</name>
+    <name>VirtualStable</name>
+    <name>HorseInformation</name>
+    <name>Entries/IndividualRace</name>
+    <name>News/Index</name>
+    <name>Entries/Races</name>
+    <name>Schedule</name>
+    <name>Workouts/Dates</name>
+    <name>BrowserActivity</name>
+    <name>Welcome</name>
+    <name>Home Screen</name>
+    <name>Results/Races</name>
+    <name>InternationalResults/Tracks</name>
+    <name>Changes/Track</name>
+    <act2name/>
+</universe>

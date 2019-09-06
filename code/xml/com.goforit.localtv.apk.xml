@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ com.goforit.localtv.apk.xml - part of the GATOR project
+  ~
+  ~ Copyright (c) 2018 The Ohio State University
+  ~
+  ~ This file is distributed under the terms described in LICENSE
+  ~ in the root directory.
+  -->
+
+<universe>
+    <autoTracking>false</autoTracking>
+    <name>More News</name>
+    <name>Traffic</name>
+    <name>Latest News Article</name>
+    <name>Privacy Policy</name>
+    <name>Message Center</name>
+    <name>Watch Live</name>
+    <name>Terms Of Use</name>
+    <name>Search Article</name>
+    <name>Story Correction</name>
+    <name>Latest News</name>
+    <name>Local Weather Page</name>
+    <name>More News Article</name>
+    <name>Video Brief Tutorial</name>
+    <name>Search</name>
+    <name>Radar</name>
+    <name>My News Article</name>
+    <name>Share Story</name>
+    <name>Video Brief</name>
+    <name>My News Preferences</name>
+    <name>My News</name>
+    <name>Top Stories</name>
+    <name>Webview</name>
+    <name>Notification Settings</name>
+    <name>Breaking News Article</name>
+    <name>About</name>
+    <name>Weather Alerts</name>
+    <name>Contact Us</name>
+    <name>Push Article</name>
+    <name>Top Story Article</name>
+    <act2name/>
+</universe>

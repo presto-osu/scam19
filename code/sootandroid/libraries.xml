@@ -1,0 +1,20 @@
+<!--
+  ~ libraries.xml - part of the GATOR project
+  ~
+  ~ Copyright (c) 2019 The Ohio State University
+  ~
+  ~ This file is distributed under the terms described in LICENSE
+  ~ in the root directory.
+  -->
+<libraries>
+    <role type="analytics">
+        <class type="Google Analytics">
+            <rule sig="com.google.android.apps.analytics."/>
+            <rule sig="com.google.android.gms.analytics."/>
+        </class>
+        <class type="Google Firebase Analytics">
+            <rule sig="com.google.firebase.analytics."/>
+            <rule sig="com.google.android.gms.measurement."/>
+        </class>
+    </role>
+</libraries>

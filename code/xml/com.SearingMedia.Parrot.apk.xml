@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ com.SearingMedia.Parrot.apk.xml - part of the GATOR project
+  ~
+  ~ Copyright (c) 2018 The Ohio State University
+  ~
+  ~ This file is distributed under the terms described in LICENSE
+  ~ in the root directory.
+  -->
+
+<universe>
+    <autoTracking>false</autoTracking>
+    <name>Settings Rate App</name>
+    <name>Pro Upgrade</name>
+    <name>Settings Share</name>
+    <name>Settings Recording Quality</name>
+    <name>Pro Screenshot Schedule Add New</name>
+    <name>Settings Help Center</name>
+    <name>Pro Info Scheduled Recordings</name>
+    <name>Pro Screenshot Backup All Tracks</name>
+    <name>Pro Info Backup</name>
+    <name>Pro Info Upgrade</name>
+    <name>Settings Recording Alerts</name>
+    <name>Add Scheduled Recordings</name>
+    <name>Dialog Recording Autopause</name>
+    <name>Settings Request a Feature</name>
+    <name>Dialog Recording Gain</name>
+    <name>Onboarding Record</name>
+    <name>Settings</name>
+    <name>Dialog Recording Presets</name>
+    <name>Dialog Upgrade Feature</name>
+    <name>Dialog Change Log</name>
+    <name>Battery Optimizations</name>
+    <name>Settings Recording Effects</name>
+    <name>Onboarding Play</name>
+    <name>Dialog Recording Settings</name>
+    <name>Settings Recording Miscellaneous</name>
+    <name>About</name>
+    <name>Onboarding</name>
+    <name>Settings Phone Calls</name>
+    <name>Onboarding Settings</name>
+    <name>Dialog Speed and Pitch</name>
+    <name>Dialog Play Effects</name>
+    <name>Settings Recording Source</name>
+    <name>Save</name>
+    <name>Settings Theme</name>
+    <name>Settings Recording Autopause</name>
+    <name>Backup</name>
+    <name>Pro Screenshot Phone Record Call</name>
+    <name>Settings Google+</name>
+    <name>Pro Only</name>
+    <name>Dialog Full Player Onboarding</name>
+    <name>Call Prompt After</name>
+    <name>Scheduled Recordings List</name>
+    <name>Dialog Recording Effects</name>
+    <name>Pro Screenshot Backup Save and Backup</name>
+    <name>Track Details</name>
+    <name>Pro View All Features Website</name>
+    <name>Settings Recording Location</name>
+    <name>Record</name>
+    <name>Pro Screenshot Phone Call Settings</name>
+    <name>Dialog Storage Permissions</name>
+    <name>Call Prompt Before</name>
+    <name>Settings Join Beta</name>
+    <name>Phone Calls</name>
+    <name>Pro Info All Features</name>
+    <name>Full Player</name>
+    <name>Settings Playback</name>
+    <name>Play</name>
+    <name>Pro Screenshot Schedule List</name>
+    <name>Share</name>
+    <name>Settings Recording Display</name>
+    <name>Settings Feedback</name>
+    <name>Pro Info Phone Calls</name>
+    <name>Pro Screenshot Phone Call List</name>
+    <name>Share Track</name>
+    <act2name/>
+</universe>

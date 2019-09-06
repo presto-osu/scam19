@@ -1,0 +1,98 @@
+# Prerequisites
+
+The experiments in our SCAM'19 paper are conducted on a machine with
+Intel(R) Xeon(R) CPU E5-2630, 64GB RAM and Ubuntu 18.04 LTS. Before
+the next steps, Android SDK and platform 27 need to be installed, as
+well as Java 1.8+ and Python 3.
+
+# Analysis and Instrumentation
+
+The source code for the static analysis and instrumentation in the
+paper is in the `code` folder.  We provide a script `gator` for ease
+of invocations of the Java program. 
+
+## Static analysis
+
+The source code for the static analysis is in a module called
+`sootandroid`. It is build upon the Soot analysis framework.  To
+build the project, first create a file `local.properties` indicating
+the location of the Android SDK. This file complies with Android
+Studio's configuration file. An example is in the `code` folder.
+Please change the settings accordingly.
+
+Next, run the following commands:
+
+```bash
+$ cd code
+$ ./gator b
+```
+
+Take the `parking` app as an example, the command below invokes the
+analysis
+
+```bash
+$ ./gator a -p ../apks/il.talent.parking.apk
+```
+
+The output (a dictionary of screen names in XML format) is by default
+printed to the console. For other options, one can run the script
+with `-h`, as follows
+
+```bash
+$ ./gator a -h
+```
+
+The results for the 15 experimental subjects are stored in `xml`.
+
+## Instrumentation and Monkey
+
+As introduced in the paper, the instrumentation is to insert the
+implemenation layer into closed-sourced APKs for recording of
+run-time events. The source code is in `code/instrument`.  Follow the
+above mentioned build process to build the module.
+
+To run the instrumentation, one can use the `i` command for `gator`
+
+```bash
+$ ./gator i -x xml/il.talent.parking.apk.xml -p ../apks/il.talent.parking.apk
+```
+
+Other options can be checked by passing `-h` in the similar way
+above.
+
+The resulting instrumented APK is stored in `code/sootOutput/mani`.
+There are several scripts to help signing, installation and running
+of the APK in the same directory.  File `simulate_by_monkey.py` is a
+all-in-one script that atomatically instruments and the run an APK
+using Monkey. Again, we take the `parking` app as an example and show
+the usage of the script below
+
+```bash
+$ cd sootOutput/mani
+$ ./simulate_by_monkey.py ../../../apks/il.talent.parking.apk api_27_0 emulator-5554
+```
+
+The first parameter is the path of the APK. The second is the name
+for the virtual device (AVD) and the third is the name for the
+run-time emulator. Note that no window will be displayed for the
+emulator during the execution.
+
+# Simulation and Plotting
+
+Directory `simulation` includes the script for simulation and
+plotting. Subfolder `figure` contains the generated figures (shown in
+the evaluation section of the paper).
+Use the following command to run the script w/ and w/o sampling
+
+```bash
+$ ./simulate_randomization_and_plot.py 100 # without sampling
+$ ./simulate_randomization_and_plot.py 100 10 # with sampling
+```
+
+The first parameter is the number of simulated users per Monkey run.
+When it is 100, `k=100x1`, `k=100x10`, and `k=100x1000` users are
+simulated and their results will all be recorded for plotting. The
+second parameter is the sampling size `t`. If not given, no sampling
+is conducted.  The script also plots the results in the `figure`
+folder.
+

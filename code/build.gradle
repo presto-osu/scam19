@@ -1,0 +1,38 @@
+/*
+ * build.gradle - part of the GATOR project
+ *
+ * Copyright (c) 2019 The Ohio State University
+ *
+ * This file is distributed under the terms described in LICENSE
+ * in the root directory.
+ */
+
+group 'edu.osu.cse.presto'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+//        maven { url 'https://jitpack.io' }
+        mavenCentral()
+        jcenter()
+        google()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.0'
+//        classpath "com.github.nekocode:GradleImportAar:0.5"
+    }
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+        jcenter()
+        google()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+    delete 'pygator/__pycache__'
+    delete 'sootOutput/mani/gorilla/__pycache__'
+}

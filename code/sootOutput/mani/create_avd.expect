@@ -1,0 +1,5 @@
+set name [lindex $argv 0];
+spawn avdmanager create avd --force -n "$name" -k "system-images;android-27;google_apis;x86"
+expect "Do you wish to create a custom hardware profile"
+send "no\n"
+interact

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ com.daily.bible.verse.app.apk.xml - part of the GATOR project
+  ~
+  ~ Copyright (c) 2018 The Ohio State University
+  ~
+  ~ This file is distributed under the terms described in LICENSE
+  ~ in the root directory.
+  -->
+
+<universe>
+    <autoTracking>false</autoTracking>
+    <name>VideoPlayer</name>
+    <name>FeedArticleDetail</name>
+    <name>WebAction</name>
+    <name>AudioPlayer</name>
+    <name>PodcastAction</name>
+    <name>DisQusComment</name>
+    <name>ExploreSource</name>
+    <name>WebBrowser</name>
+    <name>Web</name>
+    <name>FeedArticleList</name>
+    <name>ForumThread</name>
+    <name>WhatsNew</name>
+    <name>Download</name>
+    <name>Translate</name>
+    <name>Home</name>
+    <name>ImageViewer</name>
+    <name>Settings</name>
+    <act2name/>
+</universe>

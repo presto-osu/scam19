@@ -23,6 +23,7 @@ except:
     RESET = ''
 
 ADB = os.path.join(os.environ['ANDROID_SDK'], 'platform-tools', 'adb')
+AAPT = os.path.join(os.environ['ANDROID_SDK'], 'build-tools', '28.0.3', 'aapt')
 
 progress_signs = ['-', '/', '|', '\\']
 progress_idx = 0
@@ -192,7 +193,7 @@ class Gorilla:
             subprocess.call([ADB, '-s', device, 'root'])
 
     def get_pkg_name(self):
-        command = 'aapt dump badging ' + self.apk_path + ' | grep "package: name"'
+        command = AAPT + ' dump badging ' + self.apk_path + ' | grep "package: name"'
         try:
             out = subprocess.check_output(command.split(),
                                           stderr=subprocess.STDOUT,

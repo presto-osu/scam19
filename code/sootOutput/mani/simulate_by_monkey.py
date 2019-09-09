@@ -30,7 +30,7 @@ def instrument(apk, apk_name, ga_id):
     if not os.path.isfile('%s/%s' % (MANI_DIR, apk_name)):
         warn('Instrument and sign...')
         cmd = '%s i -x xml/%s.xml -p %s --experiment --immediate' % (
-            GATOR, apk_name, apk)
+            GATOR, apk_name, os.path.realpath(apk))
         if ga_id:
             cmd = '%s --id %s' % (cmd, ga_id)
         info(cmd)

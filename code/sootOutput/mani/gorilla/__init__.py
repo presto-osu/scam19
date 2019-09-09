@@ -22,7 +22,6 @@ except:
     MAGENTA = ''
     RESET = ''
 
-
 ADB = os.path.join(os.environ['ANDROID_SDK'], 'platform-tools', 'adb')
 
 progress_signs = ['-', '/', '|', '\\']
@@ -75,8 +74,9 @@ def get_devices():
     try:
         command = [ADB, 'devices']
         # info(' '.join(command))
-        out = subprocess.check_output(
-            command, stderr=subprocess.STDOUT, universal_newlines=True)
+        out = subprocess.check_output(command,
+                                      stderr=subprocess.STDOUT,
+                                      universal_newlines=True)
     except subprocess.CalledProcessError as e:
         err('Fail to run (%s): %s' % (e.cmd, e.output))
         return None
@@ -93,12 +93,13 @@ def get_devices():
 
 
 def get_current_app(device):
-    cmd = 'adb -s %s shell dumpsys window w ' \
+    cmd = ADB + ' -s %s shell dumpsys window w ' \
           '| grep \\/ | grep name= | sed "s/.*name=//g" ' \
           '| sed "s/)$//g"  | sed "s/\/.*$//g"' % device
     try:
-        out = subprocess.check_output(
-            cmd.split(), stderr=subprocess.STDOUT, universal_newlines=True)
+        out = subprocess.check_output(cmd.split(),
+                                      stderr=subprocess.STDOUT,
+                                      universal_newlines=True)
     except subprocess.CalledProcessError as e:
         err('Fail to get package name (%s): %s' % (e.cmd, e.output))
         out = e.output
@@ -128,7 +129,8 @@ def read_actual_hits_from_db(db_path, limit=None):
     if not limit:
         c.execute('SELECT hit_map FROM hits ORDER BY hit_id ASC')
     else:
-        c.execute('SELECT hit_map FROM hits ORDER BY hit_id ASC LIMIT %d' % limit)
+        c.execute('SELECT hit_map FROM hits ORDER BY hit_id ASC LIMIT %d' %
+                  limit)
     ret = c.fetchall()
     conn.close()
     return ret
@@ -179,12 +181,11 @@ class Gorilla:
         self.db_path = {}
         self.logcat_proc = {}
         self.logcat_reader_executor = concurrent.futures.ThreadPoolExecutor(
-            max_workers=len(self.devices), thread_name_prefix='presto_logcat')
+            max_workers=len(self.devices))
         self.monkey_proc = {}
         self.monkey_reader_executor = concurrent.futures.ThreadPoolExecutor(
-            max_workers=len(self.devices), thread_name_prefix='presto_monkey')
+            max_workers=len(self.devices))
         self.initialized = True
-
 
     def root(self):
         for device in self.devices:
@@ -193,10 +194,9 @@ class Gorilla:
     def get_pkg_name(self):
         command = 'aapt dump badging ' + self.apk_path + ' | grep "package: name"'
         try:
-            out = subprocess.check_output(
-                command.split(),
-                stderr=subprocess.STDOUT,
-                universal_newlines=True)
+            out = subprocess.check_output(command.split(),
+                                          stderr=subprocess.STDOUT,
+                                          universal_newlines=True)
         except subprocess.CalledProcessError as e:
             err('Fail to get package name (%s): %s' % (e.cmd, e.output))
             out = e.output
@@ -216,25 +216,23 @@ class Gorilla:
             if not self.check_app_existence(device):
                 warn(self.pkg_name + ' does not exist.')
                 return
-            command = 'adb -s ' + device + ' uninstall ' + self.pkg_name
+            command = ADB + ' -s ' + device + ' uninstall ' + self.pkg_name
             info(command)
             try:
-                subprocess.call(
-                    command.split(),
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.STDOUT)
+                subprocess.call(command.split(),
+                                stdout=subprocess.DEVNULL,
+                                stderr=subprocess.STDOUT)
                 info('Successfully remove %s' % self.pkg_name)
             except subprocess.CalledProcessError as e:
                 err('Fail to remove app (%s): %s' % (e.cmd, e.output))
 
     def check_app_existence(self, device):
-        command = 'adb -s ' + device + ' shell pm list packages -3'
+        command = ADB + ' -s ' + device + ' shell pm list packages -3'
         info(command)
         try:
-            out = subprocess.check_output(
-                command.split(),
-                stderr=subprocess.STDOUT,
-                universal_newlines=True)
+            out = subprocess.check_output(command.split(),
+                                          stderr=subprocess.STDOUT,
+                                          universal_newlines=True)
             for line in out.split('\n'):
                 # info(self.pkg_name + '..................' + line[len('package:'):])
                 if line[len('package:'):] == self.pkg_name:
@@ -272,11 +270,10 @@ class Gorilla:
                 self.apk_path
             ]
             info(' '.join(command))
-            out = subprocess.check_output(
-                command,
-                stderr=subprocess.STDOUT,
-                timeout=120,
-                universal_newlines=True)
+            out = subprocess.check_output(command,
+                                          stderr=subprocess.STDOUT,
+                                          timeout=120,
+                                          universal_newlines=True)
             if 'Success' in out:
                 return True
             err("Cannot install app <" + self.apk_path + "> on " + device)
@@ -299,19 +296,19 @@ class Gorilla:
 
     def disable_notif_bar_per_device(self, device):
         self.root()
-        command = 'adb -s %s shell settings put global policy_control immersive.full=*' % device
+        command = ADB + ' -s %s shell settings put global policy_control immersive.full=*' % device
         info(command)
         subprocess.call(command.split())
-        command = 'adb -s %s shell pm disable com.android.systemui' % device
+        command = ADB + ' -s %s shell pm disable com.android.systemui' % device
         info(command)
         subprocess.call(command.split())
 
     def enable_notif_bar_per_device(self, device):
         self.root()
-        command = 'adb -s %s shell settings put global policy_control null' % device
+        command = ADB + ' -s %s shell settings put global policy_control null' % device
         info(command)
         subprocess.call(command.split())
-        command = 'adb -s %s shell pm enable com.android.systemui' % device
+        command = ADB + ' -s %s shell pm enable com.android.systemui' % device
         info(command)
         subprocess.call(command.split())
 
@@ -321,15 +318,21 @@ class Gorilla:
 
     def force_stop_per_device(self, device):
         warn('Force stopping %s on %s' % (self.pkg_name, device))
-        command = 'adb -s ' + device + ' shell am force-stop ' + self.pkg_name
+        command = ADB + ' -s ' + device + ' shell am force-stop ' + self.pkg_name
         subprocess.call(command.split())
 
     def start_monkey(self, device, throttle, num_events, seed):
-        if not seed:
-            seed = current_milli_time()
-        info('Monkey with seed: %s' % seed)
-        command = 'adb -s %s shell monkey -p %s -s %s --pct-appswitch 0 --pct-trackball 0 --pct-syskeys 0 --throttle %s --kill-process-after-error -v %s' % (
-            device, self.pkg_name, seed, throttle, num_events)
+        command = ADB + ' -s %s shell monkey -p %s --pct-permission 0 --pct-appswitch 0 --pct-trackball 0 --pct-syskeys 0 --kill-process-after-error -v' % (
+            device, self.pkg_name)
+        if seed is not None:
+            command = '%s -s %s' % (command, seed)
+            info('Monkey with seed: %s' % seed)
+        if throttle < 1:
+            command = '%s --randomize-throttle' % command
+            info('Monkey with randomized throttle')
+        else:
+            command = '%s --throttle %d' % (command, throttle)
+        command = '%s %d' % (command, num_events)
         try:
             self.monkey_proc[device] = subprocess.Popen(
                 command.split(),
@@ -408,7 +411,7 @@ class Gorilla:
                 # warn(inline)
                 progress('.')
         finally:
-            warn('Monkey reader finished on %s @%s' % (device, proc.pid))
+            info('Monkey reader finished on %s @%s' % (device, proc.pid))
             timer.cancel()
 
     def kill_logcat(self, device):

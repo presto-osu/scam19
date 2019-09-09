@@ -280,7 +280,7 @@ def main():
     xml = xmls[apk_name[:-len('.apk')]]
     num_nodes = len(xml['name'])
     # num_nodes = sum(1 for line in open('%s/activities/%s.txt' % (MANI_DIR, apk_name)))
-    info('----- number of node: %s' % num_nodes)
+    info('----- number of nodes: %s' % num_nodes)
     run(args.apk, args.avd, args.device, args.ga_id, num_nodes,
         args.fix_degree_per_node, args.start_idx, args.num_runs, args.window,
         args.throttle, args.num_events)

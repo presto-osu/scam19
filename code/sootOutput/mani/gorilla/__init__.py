@@ -8,6 +8,7 @@ import time
 import shutil
 import datetime
 from threading import Timer
+from subprocess import call
 
 try:
     from colorama import Fore
@@ -24,6 +25,15 @@ except:
 
 ADB = os.path.join(os.environ['ANDROID_SDK'], 'platform-tools', 'adb')
 AAPT = os.path.join(os.environ['ANDROID_SDK'], 'build-tools', '28.0.3', 'aapt')
+
+if not os.path.exists(AAPT):
+    print('%s [%sWARN%s] %s' % (datetime.datetime.now(), MAGENTA, RESET,
+                                'Installing "build-tools;28.0.3"'))
+    cmd = [
+        os.path.join(args.sdkpath, 'tools', 'bin', 'sdkmanager'),
+        'build-tools;28.0.3'
+    ]
+    call(cmd)
 
 progress_signs = ['-', '/', '|', '\\']
 progress_idx = 0

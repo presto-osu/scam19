@@ -13,9 +13,9 @@ described in the SCAM'19 paper:
 
 The directory structure is as follows:
 
-- README: this file.
+- README.md: this file.
 
-- INSTALL: instructions for reproduction of the results in the paper.
+- INSTALL.md: instructions for reproduction of the results in the paper.
 
 - LICENSE: license for the software components developed at OSU.
 

@@ -90,7 +90,10 @@ Run the script with `-h` option shows other options/parameters.
 This script will keep triggering the Monkey tool to generate random
 events to be fed into the emulator. In our experiments, we stop this
 process when the number of screen view events goes beyond `10x` the
-size of the dictionary.
+size of the dictionary. The results are SQLite databases stored in
+`code/sootOutput/mani/db`. All screen view events are in table
+`hits`.
+
 
 # Simulation and Plotting
 
@@ -105,7 +108,8 @@ $ ./simulate_randomization_and_plot.py 100 # without sampling
 $ ./simulate_randomization_and_plot.py 100 10 # with sampling
 ```
 
-The first parameter is the number of simulated users per Monkey run.
+This script reads the resulting databses from the above step.  The
+first parameter is the number of simulated users per Monkey run.
 When it is 100, `k=100x1`, `k=100x10`, and `k=100x1000` users are
 simulated and their results will all be recorded for plotting. The
 second parameter is the sampling size `t`. If not given, no sampling

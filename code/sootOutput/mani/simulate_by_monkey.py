@@ -2,12 +2,14 @@
 
 import argparse
 import glob
-import gorilla
 import os
 import shutil
 import subprocess
 import sys
 import time
+import json
+
+import gorilla
 import xmltodict
 from gorilla import info, warn, err, Gorilla, get_devices, progress, kill_proc
 
@@ -15,10 +17,9 @@ MANI_DIR = os.path.realpath(os.path.dirname(__file__))
 GATOR_DIR = os.path.realpath(os.path.join(MANI_DIR, '..', '..'))
 GATOR = os.path.join(GATOR_DIR, 'gator')
 
-hostname = subprocess.check_output(['hostname']).strip()
-
 ADB = os.path.join(os.environ['ANDROID_SDK'], 'platform-tools', 'adb')
 EMULATOR = os.path.join(os.environ['ANDROID_SDK'], 'emulator', 'emulator')
+
 
 def newline():
     sys.stdout.write('\n')
@@ -33,12 +34,11 @@ def instrument(apk, apk_name, ga_id):
         if ga_id:
             cmd = '%s --id %s' % (cmd, ga_id)
         info(cmd)
-        proc = subprocess.Popen(
-            cmd.split(),
-            cwd=GATOR_DIR,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            universal_newlines=True)
+        proc = subprocess.Popen(cmd.split(),
+                                cwd=GATOR_DIR,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.STDOUT,
+                                universal_newlines=True)
         has_send = False
         while True:
             inline = proc.stdout.readline()
@@ -60,16 +60,8 @@ def instrument(apk, apk_name, ga_id):
 # settings put global airplane_mode_on 0
 # am broadcast -a android.intent.action.AIRPLANE_MODE
 # svc wifi enable
-def run(apk,
-        avd,
-        dev,
-        ga_id,
-        num_nodes,
-        fix_degree_per_node,
-        start_idx,
-        num_runs,
-        window,
-        throttle):
+def run(apk, avd, dev, ga_id, num_nodes, fix_degree_per_node, start_idx,
+        num_runs, window, throttle, num_events):
     apk_name = apk.split('/')[-1]
     info('---------------------- %s on %s -----------------' % (apk_name, dev))
 
@@ -84,7 +76,8 @@ def run(apk,
         info('------------- %d-th run ------------' % x)
 
         proc = run_on_emulator(apk, apk_name, x, ga_id, seeds, avd, dev,
-                               num_nodes, fix_degree_per_node, window, True, throttle)
+                               num_nodes, fix_degree_per_node, window, True,
+                               throttle, num_events)
 
         dbfile = '%s/db/%s_%s.db' % (MANI_DIR, pkg_name, dev)
         rdbfile = '%s/db/%s_%d_%s.random.db' % (MANI_DIR, pkg_name, x, dev)
@@ -163,18 +156,8 @@ def shutdown(avd, dev):
             break
 
 
-def run_on_emulator(apk,
-                    apk_name,
-                    x,
-                    ga_id,
-                    seeds,
-                    avd,
-                    dev,
-                    num_nodes,
-                    fix_degree_per_node,
-                    window,
-                    reboot,
-                    throttle):
+def run_on_emulator(apk, apk_name, x, ga_id, seeds, avd, dev, num_nodes,
+                    fix_degree_per_node, window, reboot, throttle, num_events):
     if reboot:
         shutdown(avd, dev)
         port = dev[len('emulator-'):]
@@ -185,11 +168,10 @@ def run_on_emulator(apk,
         if not window:
             cmd.append('-no-window')
         info(' '.join(cmd))
-        proc = subprocess.Popen(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            universal_newlines=True)
+        proc = subprocess.Popen(cmd,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.STDOUT,
+                                universal_newlines=True)
         info('Running emulator @%s' % proc.pid)
     while True:
         inline = proc.stdout.readline()
@@ -201,20 +183,26 @@ def run_on_emulator(apk,
         # sys.stdout.write(inline)
         if "emulator: ERROR: There's another emulator instance running with the current AVD" in inline:
             newline()
-            warn('Multiple instances of %s at %s for %d-th run...' % (avd, dev,
-                                                                      x))
+            warn('Multiple instances of %s at %s for %d-th run...' %
+                 (avd, dev, x))
             kill_proc(proc)
             time.sleep(15)
             run_on_emulator(apk, apk_name, x, ga_id, seeds, avd, dev,
-                            num_nodes, fix_degree_per_node, window, reboot, throttle)
-        if 'QXcbConnection: Could not connect to display' in inline:
+                            num_nodes, fix_degree_per_node, window, reboot,
+                            throttle, num_events)
+            break
+        elif 'QXcbConnection: Could not connect to display' in inline:
             newline()
-            warn('Failed to start avd %s at %s with window @%s' % (avd, dev,
-                                                                   proc.pid))
+            warn('Failed to start avd %s at %s with window @%s' %
+                 (avd, dev, proc.pid))
             warn('Restart without window...')
+            kill_proc(proc)
+            time.sleep(15)
             run_on_emulator(apk, apk_name, x, ga_id, seeds, avd, dev,
-                            num_nodes, fix_degree_per_node, False, reboot, throttle)
-        if 'emulator: INFO: boot completed' in inline:
+                            num_nodes, fix_degree_per_node, False, reboot,
+                            throttle, num_events)
+            break
+        elif 'emulator: INFO: boot completed' in inline:
             newline()
             info('Emulator started...')
             instrument(apk, apk_name, ga_id)
@@ -226,12 +214,15 @@ def run_on_emulator(apk,
                 break
             g.clear_package()
             cur_total_degree = 0
+            cur_total_screens = 0
             times = 0
-            while cur_total_degree < num_nodes * fix_degree_per_node:
+            while cur_total_degree <= num_nodes * fix_degree_per_node or cur_total_screens < 2:
                 if seeds and x < len(seeds):
-                    g.run_monkey(throttle=throttle, num_events=500, seed=seeds[x])
+                    g.run_monkey(throttle=throttle,
+                                 num_events=num_events,
+                                 seed=seeds[x])
                 else:
-                    g.run_monkey(throttle=throttle, num_events=500)
+                    g.run_monkey(throttle=throttle, num_events=num_events)
                 time.sleep(5)
                 info('Retrieving database...')
                 g.store_dbs()
@@ -242,6 +233,9 @@ def run_on_emulator(apk,
                     # hist = json.loads(gorilla.read_graph_edge_histogram_from_db(dbfile)[0])
                     # total_degree = sum(hist.values())
                     # total_degree = int(gorilla.read_number_of_events_from_db(dbfile)[0])
+                    events = gorilla.read_actual_hits_from_db(dbfile)
+                    screens = [json.loads(e[0])['&cd'] for e in events]
+                    cur_total_screens = len(set(screens))
                     total_degree = int(
                         gorilla.read_actual_hit_num_from_db(dbfile)[0])
                     if total_degree == cur_total_degree:
@@ -252,11 +246,16 @@ def run_on_emulator(apk,
                     err('Failed to read degree from %s' % dbfile)
                     os.remove(dbfile)
                 times += 1
-                warn('[%d] %d: Current degree: %d' % (x, times,
-                                                      cur_total_degree))
+                warn('[%d] %d: Current degree: %d, #Screen: %d' %
+                     (x, times, cur_total_degree, cur_total_screens))
+                if times > 100:
+                    warn('Too many (%s) Monkey tries, restart emulator...' %
+                         times)
+                    run_on_emulator(apk, apk_name, x, ga_id, seeds, avd, dev,
+                                    num_nodes, fix_degree_per_node, window,
+                                    reboot, throttle, num_events)
+                    break
             break
-            shutdown(avd, dev)
-
     return proc
 
 
@@ -281,81 +280,80 @@ def main():
     xml = xmls[apk_name[:-len('.apk')]]
     num_nodes = len(xml['name'])
     # num_nodes = sum(1 for line in open('%s/activities/%s.txt' % (MANI_DIR, apk_name)))
-    info('----- number of nodes: %s' % num_nodes)
+    info('----- number of node: %s' % num_nodes)
     run(args.apk, args.avd, args.device, args.ga_id, num_nodes,
-        args.fix_degree_per_node, args.start_idx, args.num_runs, args.window, args.throttle)
+        args.fix_degree_per_node, args.start_idx, args.num_runs, args.window,
+        args.throttle, args.num_events)
     return
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Running emulators.')
-    parser.add_argument(
-        '-v',
-        '--avd',
-        dest='avd',
-        metavar='AVD',
-        required=True,
-        help='specify AVD')
-    parser.add_argument(
-        '-d',
-        '--device',
-        dest='device',
-        metavar='DEV',
-        required=True,
-        help='specify device name')
-    parser.add_argument(
-        '-p',
-        '--apk',
-        dest='apk',
-        metavar='PATH',
-        required=True,
-        help='specify APK path')
-    parser.add_argument(
-        '-i',
-        '--ga-id',
-        dest='ga_id',
-        metavar='ID',
-        default='UA-22467386-22',
-        help='specify custom GA ID')
-    parser.add_argument(
-        '-g',
-        '--degree',
-        dest='fix_degree_per_node',
-        metavar='N',
-        type=int,
-        default=10,
-        help='specify degree per node')
-    parser.add_argument(
-        '-s',
-        '--start-index',
-        dest='start_idx',
-        metavar='N',
-        type=int,
-        default=0,
-        help='specify start round')
-    parser.add_argument(
-        '-n',
-        '--num-runs',
-        dest='num_runs',
-        metavar='N',
-        type=int,
-        default=1,
-        help='number of runs per emulator')
-    parser.add_argument(
-        '-t',
-        '--throttle',
-        dest='throttle',
-        metavar='N',
-        type=int,
-        default=200,
-        help='throttle of Monkey, <1 for randomized throttle')
-    parser.add_argument(
-        '-w',
-        '--window',
-        dest='window',
-        action='store_true',
-        default=False,
-        help='show GUI')
+    parser.add_argument('-v',
+                        '--avd',
+                        dest='avd',
+                        metavar='AVD',
+                        required=True,
+                        help='specify AVD')
+    parser.add_argument('-d',
+                        '--device',
+                        dest='device',
+                        metavar='DEV',
+                        required=True,
+                        help='specify device name')
+    parser.add_argument('-p',
+                        '--apk',
+                        dest='apk',
+                        metavar='PATH',
+                        required=True,
+                        help='specify APK path')
+    parser.add_argument('-i',
+                        '--ga-id',
+                        dest='ga_id',
+                        metavar='ID',
+                        default='UA-22467386-22',
+                        help='specify custom GA ID')
+    parser.add_argument('-g',
+                        '--degree',
+                        dest='fix_degree_per_node',
+                        metavar='N',
+                        type=int,
+                        default=10,
+                        help='specify degree per node')
+    parser.add_argument('-s',
+                        '--start-index',
+                        dest='start_idx',
+                        metavar='N',
+                        type=int,
+                        default=0,
+                        help='specify start round')
+    parser.add_argument('-n',
+                        '--num-runs',
+                        dest='num_runs',
+                        metavar='N',
+                        type=int,
+                        default=1,
+                        help='number of runs per emulator')
+    parser.add_argument('-t',
+                        '--throttle',
+                        dest='throttle',
+                        metavar='N',
+                        type=int,
+                        default=200,
+                        help='throttle of Monkey, <1 for randomized throttle')
+    parser.add_argument('-e',
+                        '--events',
+                        dest='num_events',
+                        metavar='N',
+                        type=int,
+                        default=500,
+                        help='number of events for each Monkey run')
+    parser.add_argument('-w',
+                        '--window',
+                        dest='window',
+                        action='store_true',
+                        default=False,
+                        help='show GUI')
     return parser.parse_args()
 
 

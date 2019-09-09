@@ -68,8 +68,9 @@ The resulting instrumented APK will be stored in
 `code/sootOutput/mani` folder.  There are several scripts to help
 signing, installation and running of the APK. Script
 `simulate_by_monkey.py` is a all-in-one script that atomatically
-instruments and the run an APK using Monkey. Again, we take the
-`parking` app as an example and show the usage of the script below:
+instruments and the run an APK using Monkey. It requires environment
+variable `ANDROID_SDK` preset. Again, we take the `parking` app as an
+example and show the usage of the script below:
 
 ```bash
 $ cd sootOutput/mani

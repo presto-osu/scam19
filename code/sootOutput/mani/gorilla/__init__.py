@@ -30,7 +30,7 @@ if not os.path.exists(AAPT):
     print('%s [%sWARN%s] %s' % (datetime.datetime.now(), MAGENTA, RESET,
                                 'Installing "build-tools;28.0.3"'))
     cmd = [
-        os.path.join(args.sdkpath, 'tools', 'bin', 'sdkmanager'),
+        os.path.join(os.environ['ANDROID_SDK'], 'tools', 'bin', 'sdkmanager'),
         'build-tools;28.0.3'
     ]
     call(cmd)

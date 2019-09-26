@@ -1,11 +1,11 @@
 This release includes the source code for the static analyses,
 instrumentation and necessary scripts to reproduce the results
-described in the SCAM'19 paper:
+described in the SCAM'19 [paper](http://web.cse.ohio-state.edu/presto/pubs/scam19.pdf):
 
 ```
 @inproceedings{zhang-scam19,
-  title = " Introducing Privacy in Screen Event Frequency Analysis for {Android} Apps",
-  author = " Hailong Zhang and Sufian Latif and Raef Bassily and Atanas Rountev",
+  title = "Introducing Privacy in Screen Event Frequency Analysis for {Android} Apps",
+  author = "Hailong Zhang and Sufian Latif and Raef Bassily and Atanas Rountev",
   booktitle = "IEEE International Working Conference on Source Code Analysis and Manipulation",
   year = 2019,
 } 

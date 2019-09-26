@@ -15,7 +15,7 @@ The directory structure is as follows:
 
 - README.md: this file.
 
-- INSTALL.md: instructions for reproduction of the results in the paper.
+- INSTALL.md: [instructions](INSTALL) for reproduction of the results in the paper.
 
 - LICENSE: license for the software components developed at OSU.
 

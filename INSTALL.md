@@ -76,7 +76,7 @@ example and show the usage of the script below:
 ```bash
 $ cd code/sootOutput/mani
 $ $ANDROID_SDK/tools/bin/sdkmanager "system-images;android-27;google_apis;x86" # if you don't have it installed
-$ ./simulate_by_monkey.py -p ../../../apks/il.talent.parking.apk -v api_27_0 -d emulator-5554
+$ ./simulate_by_monkey.py -p ../../../apks/il.talent.parking.apk -v api_27_0 -d emulator-5554 -w
 ```
 
 Parameter `-p` indicates the path of the original APK. Parameters
